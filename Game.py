@@ -1,8 +1,4 @@
-import pygame
-import random
-import os
-import math
-import json
+import os, sys, math, json, random, pygame
 from Trie import Trie
 from Board import Board
 
@@ -17,7 +13,7 @@ class GameUI:
         self.volume = 0.5
         self.music_tracks = []
         for name in ["music1.mp3", "music2.mp3", "music3.mp3"]:
-            path = os.path.join("sounds", name)
+            path =  resource_path(os.path.join("sounds", name))
             if os.path.exists(path):
                 self.music_tracks.append(path)
         
@@ -853,10 +849,19 @@ class GameUI:
         pygame.quit()
 
 
+def resource_path(relative_path):
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
+
 if __name__ == "__main__":
     trie = Trie()
     try:
-        with open("enable1.txt", "r") as f:
+        with open(resource_path("enable1.txt"), "r") as f:
             for word in f.read().splitlines():
                 trie.add(word.strip().lower())
     except:
